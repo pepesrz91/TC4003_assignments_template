@@ -31,12 +31,10 @@ func topWords(path string, numWords int, charThreshold int) []WordCount {
 	noCommas := strings.Replace(noDots, ",", "", -1)
 	stringArray := strings.Fields(noCommas)
 
-	wordsFrequency := make(map[string]int)
-	// For loop for regex match
-	// for i := 0; i < len(stringArray); i++ {
-	// 	fmt.Printf("%v \n", stringArray[i])
+	// Do a for loop to check wether a word is greater or euqal  to  charThreshold
 
-	// }
+	wordsFrequency := make(map[string]int)
+
 	for _, item := range stringArray {
 		_, itemMatched := wordsFrequency[item]
 
