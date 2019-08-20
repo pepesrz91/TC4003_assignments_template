@@ -32,12 +32,10 @@ func topWords(path string, numWords int, charThreshold int) []WordCount {
 	stringArray := strings.Fields(noCommas)
 
 	// Do a for loop to check wether a word is greater or euqal  to  charThreshold
-
 	wordsFrequency := make(map[string]int)
 
 	for _, item := range stringArray {
 		_, itemMatched := wordsFrequency[item]
-
 		if itemMatched {
 			wordsFrequency[item]++
 		} else {
@@ -45,7 +43,61 @@ func topWords(path string, numWords int, charThreshold int) []WordCount {
 		}
 	}
 
-	fmt.Printf("%v \n", wordsFrequency)
+	// fmt.Printf("%v \n", wordsFrequency)
+	wordsThreshold := make(map[string]int)
+	for word, item := range wordsFrequency {
+		if len(word) >= charThreshold {
+			wordsThreshold[word] = item
+		} else {
+			continue
+		}
+	}
+
+	type kv struct {
+		Key   string
+		Value int
+	}
+
+	var ss []kv
+	for k, v := range wordsThreshold {
+		ss = append(ss, kv{k, v})
+	}
+
+	sort.Slice(ss, func(i, j int) bool {
+		return ss[i].Value > ss[j].Value
+	})
+
+	for _, kv := range ss {
+		fmt.Printf("%s, %d\n", kv.Key, kv.Value)
+	}
+
+	// keys := make([]string, 0, len(wo))
+	// for k := range wordsThreshold {
+	// 	keys = append(keys, k)
+	// }
+	// sort.Strings(keys)
+
+	// for _, k := range keys {
+	// 	fmt.Println(k, m[k])
+	// }
+
+	// var topWords []string
+
+	// for k := range wordsThreshold {
+	// 	topWords = append(topWords, k)
+	// }
+
+	// sort.Strings(topWords)
+
+	// fmt.Printf("%v \n", topWords)
+
+	// pl := make(PairList, len(wordFrequencies))
+	// i := 0
+	// for k, v := range wordFrequencies {
+	// 	pl[i] = Pair{k, v}
+	// 	i++
+	// }
+	// sort.Sort(sort.Reverse(pl))
 
 	return nil
 }
