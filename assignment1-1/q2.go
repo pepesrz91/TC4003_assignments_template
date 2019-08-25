@@ -12,6 +12,12 @@ import (
 func sumWorker(nums chan int, out chan int) {
 	// TODO: implement me
 	// HINT: use for loop over `nums`
+	sum := 0
+
+	for num := range nums {
+		sum += num
+	}
+	out <- sum
 }
 
 // Read integers from the file `fileName` and return sum of all values.
