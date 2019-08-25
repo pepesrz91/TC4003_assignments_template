@@ -3,6 +3,7 @@ package cos418_hw1_1
 import (
 	"fmt"
 	"io/ioutil"
+	"regexp"
 	"sort"
 	"strings"
 )
@@ -27,14 +28,19 @@ func topWords(path string, numWords int, charThreshold int) []WordCount {
 	// Split  the data and format it correctly
 	fileString := string(data)
 	toLowerCase := strings.ToLower(fileString)
-	noDots := strings.Replace(toLowerCase, ".", "", -1)
-	noCommas := strings.Replace(noDots, ",", "", -1)
-	stringArray := strings.Fields(noCommas)
+	noQuotation := strings.Replace(toLowerCase, "'", "", -1)
+	regularExp := regexp.MustCompile("[^0-9a-zA-Z]+")
+	fileFiltered := regularExp.Split(noQuotation, -1)
+
+	// noDots := strings.Replace(toLowerCase, ".", "", -1)
+	// noCommas := strings.Replace(noDots, ",", "", -1)
+	// noQuotation := strings.Replace(noCommas, "'", "", -1)
+	// stringArray := strings.Fields(noQuotation)
 
 	// Do a for loop to check wether a word is greater or euqal  to  charThreshold
 	wordsFrequency := make(map[string]int)
 
-	for _, item := range stringArray {
+	for _, item := range fileFiltered {
 		_, itemMatched := wordsFrequency[item]
 		if itemMatched {
 			wordsFrequency[item]++
@@ -53,24 +59,31 @@ func topWords(path string, numWords int, charThreshold int) []WordCount {
 		}
 	}
 
-	type kv struct {
-		Key   string
-		Value int
-	}
-
-	var ss []kv
+	// Append
+	var ss []WordCount
 	for k, v := range wordsThreshold {
-		ss = append(ss, kv{k, v})
+		ss = append(ss, WordCount{k, v})
 	}
 
 	sort.Slice(ss, func(i, j int) bool {
-		return ss[i].Value > ss[j].Value
+		return ss[i].Count > ss[j].Count
 	})
 
+	count := 0
+	//topWords := make(map[string]int)
+
+	sortWordCounts(ss)
+
+	var topWordCount []WordCount
 	for _, kv := range ss {
-		fmt.Printf("%s, %d\n", kv.Key, kv.Value)
+		if count >= numWords {
+			break
+		}
+		topWordCount = append(topWordCount, kv)
+		count++
 	}
 
+	//fmt.Printf("Top words %v", ss)
 	// keys := make([]string, 0, len(wo))
 	// for k := range wordsThreshold {
 	// 	keys = append(keys, k)
@@ -99,7 +112,7 @@ func topWords(path string, numWords int, charThreshold int) []WordCount {
 	// }
 	// sort.Sort(sort.Reverse(pl))
 
-	return nil
+	return topWordCount
 }
 
 // A struct that represents how many times a word is observed in a document
