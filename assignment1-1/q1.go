@@ -32,11 +32,6 @@ func topWords(path string, numWords int, charThreshold int) []WordCount {
 	regularExp := regexp.MustCompile("[^0-9a-zA-Z]+")
 	fileFiltered := regularExp.Split(noQuotation, -1)
 
-	// noDots := strings.Replace(toLowerCase, ".", "", -1)
-	// noCommas := strings.Replace(noDots, ",", "", -1)
-	// noQuotation := strings.Replace(noCommas, "'", "", -1)
-	// stringArray := strings.Fields(noQuotation)
-
 	// Do a for loop to check wether a word is greater or euqal  to  charThreshold
 	wordsFrequency := make(map[string]int)
 
@@ -70,7 +65,6 @@ func topWords(path string, numWords int, charThreshold int) []WordCount {
 	})
 
 	count := 0
-	//topWords := make(map[string]int)
 
 	sortWordCounts(ss)
 
@@ -82,35 +76,6 @@ func topWords(path string, numWords int, charThreshold int) []WordCount {
 		topWordCount = append(topWordCount, kv)
 		count++
 	}
-
-	//fmt.Printf("Top words %v", ss)
-	// keys := make([]string, 0, len(wo))
-	// for k := range wordsThreshold {
-	// 	keys = append(keys, k)
-	// }
-	// sort.Strings(keys)
-
-	// for _, k := range keys {
-	// 	fmt.Println(k, m[k])
-	// }
-
-	// var topWords []string
-
-	// for k := range wordsThreshold {
-	// 	topWords = append(topWords, k)
-	// }
-
-	// sort.Strings(topWords)
-
-	// fmt.Printf("%v \n", topWords)
-
-	// pl := make(PairList, len(wordFrequencies))
-	// i := 0
-	// for k, v := range wordFrequencies {
-	// 	pl[i] = Pair{k, v}
-	// 	i++
-	// }
-	// sort.Sort(sort.Reverse(pl))
 
 	return topWordCount
 }

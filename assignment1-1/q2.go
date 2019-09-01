@@ -2,7 +2,10 @@ package cos418_hw1_1
 
 import (
 	"bufio"
+	"fmt"
 	"io"
+	"log"
+	"os"
 	"strconv"
 )
 
@@ -26,10 +29,46 @@ func sumWorker(nums chan int, out chan int) {
 // You should use `checkError` to handle potential errors.
 // Do NOT modify function signature.
 func sum(num int, fileName string) int {
+	//var wg sync.WaitGroup
+	data, err := os.Open(fileName)
+	if err != nil {
+		fmt.Print(err)
+	}
+
+	//r := strings.NewReader(string(data))
+	// Split  the data and format it correctly
+	numbersFromFile, err := readInts(data)
+
+	nums := make(chan int, 1)
+	out := make(chan int)
+
+	for i := 0; i < num; i++ {
+		go sumWorker(nums, out)
+	}
+
+	for _, n := range numbersFromFile {
+		select {
+		case nums <- n:
+			continue
+		}
+	}
+
+	close(nums)
+
 	// TODO: implement me
 	// HINT: use `readInts` and `sumWorkers`
 	// HINT: used buffered channels for splitting numbers between workers
-	return 0
+	sum := 0
+
+	for i := 0; i < num; i++ {
+		preliminaryResult := <-out
+		log.Printf("Processing partial result %d from worker...", preliminaryResult)
+		sum += preliminaryResult
+	}
+
+	fmt.Printf("%v", sum)
+
+	return sum
 }
 
 // Read a list of integers separated by whitespace from `r`.
